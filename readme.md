@@ -1,0 +1,1 @@
+g++ -o fin.exe final.cpp ; ./fin.exe
