@@ -114,7 +114,7 @@ struct node *searchIterativeMethod(struct node *root, int key)
     return NULL;
 }
 
-void insert(struct node *root, int key)
+void insertion(struct node *root, int key)
 {
     struct node *prev = NULL;
     struct node *ptr;
@@ -144,6 +144,60 @@ void insert(struct node *root, int key)
     {
         prev->right = new;
     }
+}
+
+struct node *inOrderPredecessor(struct node *root)
+{
+    // to get the leaf node
+    root = root->left;
+    while (root->right != NULL)
+    {
+        root = root->right;
+    }
+    return root;
+}
+
+struct node *deleteNode(struct node *root, int value)
+{
+    struct node *iPre;
+    if (root == NULL)
+    {
+        return NULL;
+    }
+    // if matched and leaf node
+    if (root->left == NULL && root->right == NULL)
+    {
+        if (root->data == value)
+        {
+            free(root);
+            return NULL;
+        }
+        else
+        {
+            printf("\n%d does not exists !!!", value);
+            return root;
+        }
+    }
+
+    // Serach for the node which need to be deleted
+    if (value < root->data)
+    {
+        root->left = deleteNode(root->left, value);
+    }
+    else if (value > root->data)
+    {
+        root->right = deleteNode(root->right, value);
+    }
+
+    // Deletion strategy
+    // when the node data is either bigger or smaller
+    else
+    {
+        iPre = inOrderPredecessor(root);
+        root->data = iPre->data;
+        root->left = deleteNode(root->left, iPre->data);
+    }
+    return root;
 }
 
 int main()
@@ -192,9 +246,15 @@ int main()
     //     printf("!!! HARI BOL :/");
     // }
 
-    insert(p, 16);
+    // insertion(p, 16);
 
-    preorder(p);
+    inorder(p);
+
+    deleteNode(p, 7);
+
+    printf("\n");
+
+    inorder(p);
 
     return 0;
 }
